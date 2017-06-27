@@ -19,28 +19,48 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js.map"></script>
 
     <style>
-    .script-style{
-      height: 700px ;
-      width: 47% ;
-      background-color: #1A237E ;
-      margin-right: 40px ;
-      margin-top: 30px ;
+
+    .title-banner {
+      margin-top: 100px ;
+      background-color: #ffffff ;
+      padding: 30px ;
+    }
+
+    .overlay{
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      justify-content: center;
+      background: rgba(34, 49, 63, 0.96) ;
     }
 
     .result-style{
       height: 700px ;
-      width: 47% ;
-      background-color: #CFD8DC ;
-      margin-right: 20px ;
-      margin-top: 30px ;
+      background-color: white ;
+      padding-left: 20px ;
+      padding-top: 20px ;
+      width: 680px ;
+    }
+
+    .script-div{
+      width: 678px ;
+      background-color: #263238 ;
+      padding-left: 15px ;
+      height: 700px ;
     }
 
     .script-area{
-      background-color: #1A237E ;
+      background-color: #263238 ;
       font-family: 'Source Code Pro', monospace;
-      font-size: 16px ;
-      color: white ;
-      height: 100%;
+      font-size: 14px ;
+      height: 60%;
+      border: none ;
+      border-radius: 0 ;
+      margin-top: 30px ;
+      color: #CFD8DC ;
+
     }
     </style>
 
@@ -48,13 +68,39 @@
 
     <script type="text/babel">
 
+    const Overlay = React.createClass({
+      getInitialState: function() {
+        return {
+          display: "overlay"
+        };
+      },
+
+      _hideOverlay: function() {
+        this.setState({ display: "overlay hide" });
+      },
+
+      render: function() {
+        return (
+          <div className={this.state.display}>
+            <div className="title-banner text-center">
+              <h1>Markdown Previewer</h1>
+              <p className="lead">Edit the text in the console and see the output display as you type.<br /> Built by Dania using ReactJS and Marked library</p>
+              <button className="btn btn-lg btn-default" onClick={ this._hideOverlay }>Get Started</button>
+            </div>
+          </div>
+        );
+      }
+    });
+
     var ScriptPart = React.createClass({
       render: function(){
     		return (
-          <div className="container jumbotron script-style col-xs-4">
-            <textarea rows="26" cols="51" className="form-control script-area" id="theText" onChange={this.props.modifyResult}>
-              {this.props.text}
-            </textarea>
+          <div className="col-md-6">
+            <div className="row script-div">
+              <textarea rows="26" cols="55" className="form-control script-area" id="theText" onChange={this.props.modifyResult}>
+                {this.props.text}
+              </textarea>
+            </div>
           </div>
         ) ;
     	}
@@ -63,7 +109,11 @@
     var ResultPart = React.createClass({
       render: function(){
           return (
-            <div className="container jumbotron result-style col-xs-8 " dangerouslySetInnerHTML={this.props.textTransformed}></div>
+            <div className="col-md-6">
+              <div className="row">
+                <div className="result-style " dangerouslySetInnerHTML={this.props.textTransformed}></div>
+              </div>
+            </div>
           ) ;
       }
     });
@@ -85,15 +135,16 @@
       },
       render: function(){
         return (
-              <div className="container">
-                <div className="row">
+              <div>
                   <ScriptPart text={this.state.text} modifyResult={this.modify}/>
                   <ResultPart textTransformed={this.makeMarkup()}/>
-                </div>
+                  <Overlay />
               </div>
             );
       }
     });
+
+
 
     ReactDOM.render(<MainContainer />,document.body) ;
     </script>
@@ -101,4 +152,5 @@
 
   <body>
   </body>
+
 </html>
