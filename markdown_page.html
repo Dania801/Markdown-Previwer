@@ -1,0 +1,104 @@
+<html lang="en">
+  <head>
+    <!--React Libraries-->
+    <script src="https://fb.me/react-15.0.0.js"></script>
+    <script src="https://fb.me/react-dom-15.0.0.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+
+    <!--JQuery and Bootstrap libraries-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!--Font library-->
+    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
+
+    <!-- Markdown Libraries-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js.map"></script>
+
+    <style>
+    .script-style{
+      height: 700px ;
+      width: 47% ;
+      background-color: #1A237E ;
+      margin-right: 40px ;
+      margin-top: 30px ;
+    }
+
+    .result-style{
+      height: 700px ;
+      width: 47% ;
+      background-color: #CFD8DC ;
+      margin-right: 20px ;
+      margin-top: 30px ;
+    }
+
+    .script-area{
+      background-color: #1A237E ;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 16px ;
+      color: white ;
+      height: 100%;
+    }
+    </style>
+
+    <title>Markdown Previewer</title>
+
+    <script type="text/babel">
+
+    var ScriptPart = React.createClass({
+      render: function(){
+    		return (
+          <div className="container jumbotron script-style col-xs-4">
+            <textarea rows="26" cols="51" className="form-control script-area" id="theText" onChange={this.props.modifyResult}>
+              {this.props.text}
+            </textarea>
+          </div>
+        ) ;
+    	}
+    });
+
+    var ResultPart = React.createClass({
+      render: function(){
+          return (
+            <div className="container jumbotron result-style col-xs-8 " dangerouslySetInnerHTML={this.props.textTransformed}></div>
+          ) ;
+      }
+    });
+
+    var MainContainer = React.createClass({
+      getInitialState: function(){
+        return {
+          text: 'Heading\n=======\n\nSub-heading\n-----------\n \n### Another deeper heading\n \nParagraphs are separated\nby a blank line.\n\nLeave 2 spaces at the end of a line to do a  \nline break\n\nText attributes *italic*, **bold**, \n`monospace`, ~~strikethrough~~ .\n\nShopping list:\n\n  * apples\n  * oranges\n  * pears\n\nNumbered list:\n\n  1. apples\n  2. oranges\n  3. pears\n\nThe rain---not the reign---in\nSpain.\n\n '
+        };
+      },
+      makeMarkup: function(){
+        var rawMarkup = marked(this.state.text);
+        return { __html: rawMarkup };
+      },
+      modify: function(evt){
+        this.setState({
+          text: evt.target.value
+        })
+      },
+      render: function(){
+        return (
+              <div className="container">
+                <div className="row">
+                  <ScriptPart text={this.state.text} modifyResult={this.modify}/>
+                  <ResultPart textTransformed={this.makeMarkup()}/>
+                </div>
+              </div>
+            );
+      }
+    });
+
+    ReactDOM.render(<MainContainer />,document.body) ;
+    </script>
+  </head>
+
+  <body>
+  </body>
+</html>
